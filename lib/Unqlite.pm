@@ -35,6 +35,8 @@ This module is Perl5 binding for Unqlite.
 
 If you want to know more information about Unqlite, see L<http://unqlite.org/>.
 
+Current version of Unqlite.pm supports only some C<kv_*> methods. Patches welcome.
+
 =head1 METHODS
 
 =over 4

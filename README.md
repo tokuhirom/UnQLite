@@ -20,6 +20,8 @@ This module is Perl5 binding for Unqlite.
 
 If you want to know more information about Unqlite, see [http://unqlite.org/](http://unqlite.org/).
 
+Current version of Unqlite.pm supports only some `kv_*` methods. Patches welcome.
+
 # METHODS
 
 - `my $db = Unqlite->open('foo.db'[, $mode]);`
