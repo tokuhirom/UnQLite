@@ -4,9 +4,40 @@ use strict;
 use warnings;
 
 our $VERSION = "0.01";
+our $rc = 0;
 
 use XSLoader;
 XSLoader::load(__PACKAGE__, $VERSION);
+
+sub rc { $Unqlite::rc }
+
+sub errstr {
+    my $self = shift;
+    if ($rc==Unqlite::UNQLITE_OK()) { return "UNQLITE_OK" }
+    if ($rc==UNQLITE_NOMEM()) { return "UNQLITE_NOMEM" }
+    if ($rc==UNQLITE_ABORT()) { return "UNQLITE_ABORT" }
+    if ($rc==UNQLITE_IOERR()) { return "UNQLITE_IOERR" }
+    if ($rc==UNQLITE_CORRUPT()) { return "UNQLITE_CORRUPT" }
+    if ($rc==UNQLITE_LOCKED()) { return "UNQLITE_LOCKED" }
+    if ($rc==UNQLITE_BUSY()) { return "UNQLITE_BUSY" }
+    if ($rc==UNQLITE_DONE()) { return "UNQLITE_DONE" }
+    if ($rc==UNQLITE_PERM()) { return "UNQLITE_PERM" }
+    if ($rc==UNQLITE_NOTIMPLEMENTED()) { return "UNQLITE_NOTIMPLEMENTED" }
+    if ($rc==UNQLITE_NOTFOUND()) { return "UNQLITE_NOTFOUND" }
+    if ($rc==UNQLITE_NOOP()) { return "UNQLITE_NOOP" }
+    if ($rc==UNQLITE_INVALID()) { return "UNQLITE_INVALID" }
+    if ($rc==UNQLITE_EOF()) { return "UNQLITE_EOF" }
+    if ($rc==UNQLITE_UNKNOWN()) { return "UNQLITE_UNKNOWN" }
+    if ($rc==UNQLITE_LIMIT()) { return "UNQLITE_LIMIT" }
+    if ($rc==UNQLITE_EXISTS()) { return "UNQLITE_EXISTS" }
+    if ($rc==UNQLITE_EMPTY()) { return "UNQLITE_EMPTY" }
+    if ($rc==UNQLITE_COMPILE_ERR()) { return "UNQLITE_COMPILE_ERR" }
+    if ($rc==UNQLITE_VM_ERR()) { return "UNQLITE_VM_ERR" }
+    if ($rc==UNQLITE_FULL()) { return "UNQLITE_FULL" }
+    if ($rc==UNQLITE_CANTOPEN()) { return "UNQLITE_CANTOPEN" }
+    if ($rc==UNQLITE_READ_ONLY()) { return "UNQLITE_READ_ONLY" }
+    if ($rc==UNQLITE_LOCKERR()) { return "UNQLITE_LOCKERR" }
+}
 
 1;
 __END__
@@ -56,6 +87,14 @@ Fetch data from database.
 =item C<< $db->kv_delete($key); >>
 
 Delte C< $key > from database.
+
+=item C<< $db->rc(); >>
+
+Return code from unqlite. It may updates after any Unqlite API call.
+
+=item C<< $db->errstr() >>
+
+This API returns stringified version of C<< $db->rc() >>. It's not human readable but it's better than magic number.
 
 =back
 

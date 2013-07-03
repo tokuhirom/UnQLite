@@ -40,6 +40,14 @@ Current version of Unqlite.pm supports only some `kv_*` methods. Patches welcome
 
     Delte ` $key ` from database.
 
+- `$db->rc();`
+
+    Return code from unqlite. It may updates after any Unqlite API call.
+
+- `$db->errstr()`
+
+    This API returns stringified version of `$db->rc()`. It's not human readable but it's better than magic number.
+
 # LICENSE
 
 Copyright (C) tokuhirom.
