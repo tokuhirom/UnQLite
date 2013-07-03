@@ -13,6 +13,9 @@ ok($db->kv_store("foo", "bar"));
 is($db->kv_fetch('foo'), 'bar');
 ok($db->kv_delete('foo'));
 is($db->kv_fetch('foo'), undef);
+$db->kv_store('yay', 'yap');
+$db->kv_append('yay', 'po');
+is($db->kv_fetch('yay'), 'yappo');
 
 done_testing;
 

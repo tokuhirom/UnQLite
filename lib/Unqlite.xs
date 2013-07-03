@@ -75,6 +75,30 @@ OUTPUT:
     RETVAL
 
 SV*
+kv_append(self, key_sv, data_sv)
+    SV *self;
+    SV *key_sv;
+    SV *data_sv;
+PREINIT:
+    char *key_c;
+    STRLEN key_l;
+    char *data_c;
+    STRLEN data_l;
+    int rc;
+CODE:
+    unqlite *pdb = XS_STATE(unqlite*, self);
+    key_c = SvPV(key_sv, key_l);
+    data_c = SvPV(data_sv, data_l);
+    rc = unqlite_kv_append(pdb, key_c, key_l, data_c, data_l);
+    if (rc==UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV*
 kv_delete(self, key_sv)
     SV *self;
     SV *key_sv;
