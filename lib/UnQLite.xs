@@ -25,16 +25,16 @@ extern "C" {
 
 #define SETRC(rc) \
     { \
-        SV * i = get_sv("Unqlite::rc", GV_ADD); \
+        SV * i = get_sv("UnQLite::rc", GV_ADD); \
         SvIV_set(i, rc); \
     }
 
-MODULE = Unqlite    PACKAGE = Unqlite
+MODULE = UnQLite    PACKAGE = UnQLite
 
 PROTOTYPES: DISABLE
 
 BOOT:
-    HV* stash = gv_stashpvn("Unqlite", strlen("Unqlite"), TRUE);
+    HV* stash = gv_stashpvn("UnQLite", strlen("UnQLite"), TRUE);
     newCONSTSUB(stash, "UNQLITE_OK", newSViv(UNQLITE_OK));
     newCONSTSUB(stash, "UNQLITE_NOMEM", newSViv(UNQLITE_NOMEM));
     newCONSTSUB(stash, "UNQLITE_ABORT", newSViv(UNQLITE_ABORT));
@@ -221,7 +221,7 @@ OUTPUT:
     RETVAL
 
 
-MODULE = Unqlite    PACKAGE = Unqlite::Cursor
+MODULE = UnQLite    PACKAGE = UnQLite::Cursor
 
 SV*
 _first_entry(self)

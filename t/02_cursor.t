@@ -2,13 +2,13 @@ use strict;
 use Test::More;
 
 use File::Temp qw(tempdir);
-use Unqlite;
+use UnQLite;
 
 my $tmp = tempdir( CLEANUP => 1 );
 
-my $db = Unqlite->open("$tmp/foo.db");
+my $db = UnQLite->open("$tmp/foo.db");
 {
-    isa_ok($db, 'Unqlite');
+    isa_ok($db, 'UnQLite');
 
     ok($db->kv_store("foo", "bar"));
     ok($db->kv_store("hoge", "fuga"));

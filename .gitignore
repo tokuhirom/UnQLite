@@ -23,6 +23,6 @@ cover_db/
 
 MYMETA.*
 
-/Unqlite-*
-lib/Unqlite.c
+/UnQLite-*
+lib/UnQLite.c
 !lib/ppport.h

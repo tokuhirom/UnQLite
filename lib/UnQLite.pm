@@ -1,4 +1,4 @@
-package Unqlite;
+package UnQLite;
 use 5.008005;
 use strict;
 use warnings;
@@ -9,11 +9,11 @@ our $rc = 0;
 use XSLoader;
 XSLoader::load(__PACKAGE__, $VERSION);
 
-sub rc { $Unqlite::rc }
+sub rc { $UnQLite::rc }
 
 sub errstr {
     my $self = shift;
-    if ($rc==Unqlite::UNQLITE_OK()) { return "UNQLITE_OK" }
+    if ($rc==UnQLite::UNQLITE_OK()) { return "UNQLITE_OK" }
     if ($rc==UNQLITE_NOMEM()) { return "UNQLITE_NOMEM" }
     if ($rc==UNQLITE_ABORT()) { return "UNQLITE_ABORT" }
     if ($rc==UNQLITE_IOERR()) { return "UNQLITE_IOERR" }
@@ -41,10 +41,10 @@ sub errstr {
 
 sub cursor_init {
     my $self = shift;
-    bless [$self->_cursor_init(), $self], 'Unqlite::Cursor';
+    bless [$self->_cursor_init(), $self], 'UnQLite::Cursor';
 }
 
-package Unqlite::Cursor;
+package UnQLite::Cursor;
 
 sub first_entry {
     my $self = shift;
@@ -101,15 +101,17 @@ __END__
 
 =encoding utf-8
 
+=for stopwords UnQLite serverless NoSQL CouchDB BerkeleyDB LevelDB stringified
+
 =head1 NAME
 
-Unqlite - Perl bindings for Unqlite
+UnQLite - Perl bindings for UnQLite
 
 =head1 SYNOPSIS
 
-    use Unqlite;
+    use UnQLite;
 
-    my $db = Unqlite->open('foo.db');
+    my $db = UnQLite->open('foo.db');
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
@@ -119,19 +121,19 @@ Unqlite - Perl bindings for Unqlite
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.  
 
-This module is Perl5 binding for Unqlite.
+This module is Perl5 binding for UnQLite.
 
-If you want to know more information about Unqlite, see L<http://unqlite.org/>.
+If you want to know more information about UnQLite, see L<http://unqlite.org/>.
 
-This version of Unqlite.pm does not provides document store feature. Patches welcome.
+This version of UnQLite.pm does not provides document store feature. Patches welcome.
 
-B<You can use Unqlite.pm as DBM>.
+B<You can use UnQLite.pm as DBM>.
 
 =head1 METHODS
 
 =over 4
 
-=item C<< my $db = Unqlite->open('foo.db'[, $mode]); >>
+=item C<< my $db = UnQLite->open('foo.db'[, $mode]); >>
 
 Open the database.
 
@@ -149,7 +151,7 @@ Delte C< $key > from database.
 
 =item C<< $db->rc(); >>
 
-Return code from unqlite. It may updates after any Unqlite API call.
+Return code from UnQLite. It may updates after any UnQLite API call.
 
 =item C<< $db->errstr() >>
 
@@ -161,9 +163,9 @@ Create new cursor object.
 
 =back
 
-=head1 Unqlite::Cursor
+=head1 UnQLite::Cursor
 
-Unqlite supports cursor for iterating entries.
+UnQLite supports cursor for iterating entries.
 
 Here is example code:
 

@@ -2,13 +2,13 @@ use strict;
 use Test::More;
 
 use File::Temp qw(tempdir);
-use Unqlite;
+use UnQLite;
 
 my $tmp = tempdir( CLEANUP => 1 );
 
 {
-    my $db = Unqlite->open("$tmp/foo.db");
-    isa_ok($db, 'Unqlite');
+    my $db = UnQLite->open("$tmp/foo.db");
+    isa_ok($db, 'UnQLite');
 
     ok($db->kv_store("foo", "bar"));
     is($db->kv_fetch('foo'), 'bar');
@@ -20,7 +20,7 @@ my $tmp = tempdir( CLEANUP => 1 );
     is($db->rc,0);
 }
 
-my $db = Unqlite->open("/path/to/unexisted/file");
+my $db = UnQLite->open("/path/to/unexisted/file");
 is($db->kv_fetch('x'), undef);
 isnt($db->rc, 0);
 note $db->errstr;

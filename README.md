@@ -1,12 +1,12 @@
 # NAME
 
-Unqlite - Perl bindings for Unqlite
+UnQLite - Perl bindings for UnQLite
 
 # SYNOPSIS
 
-    use Unqlite;
+    use UnQLite;
 
-    my $db = Unqlite->open('foo.db');
+    my $db = UnQLite->open('foo.db');
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
@@ -16,17 +16,17 @@ Unqlite - Perl bindings for Unqlite
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.  
 
-This module is Perl5 binding for Unqlite.
+This module is Perl5 binding for UnQLite.
 
-If you want to know more information about Unqlite, see [http://unqlite.org/](http://unqlite.org/).
+If you want to know more information about UnQLite, see [http://unqlite.org/](http://unqlite.org/).
 
-This version of Unqlite.pm does not provides document store feature. Patches welcome.
+This version of UnQLite.pm does not provides document store feature. Patches welcome.
 
-__You can use Unqlite.pm as DBM__.
+__You can use UnQLite.pm as DBM__.
 
 # METHODS
 
-- `my $db = Unqlite->open('foo.db'[, $mode]);`
+- `my $db = UnQLite->open('foo.db'[, $mode]);`
 
     Open the database.
 
@@ -44,7 +44,7 @@ __You can use Unqlite.pm as DBM__.
 
 - `$db->rc();`
 
-    Return code from unqlite. It may updates after any Unqlite API call.
+    Return code from UnQLite. It may updates after any UnQLite API call.
 
 - `$db->errstr()`
 
@@ -54,9 +54,9 @@ __You can use Unqlite.pm as DBM__.
 
     Create new cursor object.
 
-# Unqlite::Cursor
+# UnQLite::Cursor
 
-Unqlite supports cursor for iterating entries.
+UnQLite supports cursor for iterating entries.
 
 Here is example code:
 

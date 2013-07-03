@@ -1,10 +1,10 @@
 {
-   "abstract" : "Perl bindings for Unqlite",
+   "abstract" : "Perl bindings for UnQLite",
    "author" : [
       "tokuhirom <tokuhirom@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.5.5, CPAN::Meta::Converter version 2.131490",
+   "generated_by" : "Minilla/v0.5.5, CPAN::Meta::Converter version 2.130880",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Unqlite",
+   "name" : "UnQLite",
    "no_index" : {
       "directory" : [
          "t",
