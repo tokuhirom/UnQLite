@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "Perl bindings for Unqlite",
    "author" : [
       "tokuhirom <tokuhirom@gmail.com>"
    ],
@@ -52,5 +52,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/tokuhirom/Unqlite/issues"
+      },
+      "homepage" : "https://github.com/tokuhirom/Unqlite",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tokuhirom/Unqlite.git",
+         "web" : "https://github.com/tokuhirom/Unqlite"
+      }
+   },
    "version" : "0.01"
 }
