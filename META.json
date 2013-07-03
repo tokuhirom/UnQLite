@@ -54,13 +54,13 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/tokuhirom/Unqlite/issues"
+         "web" : "https://github.com/tokuhirom/UnQLite/issues"
       },
-      "homepage" : "https://github.com/tokuhirom/Unqlite",
+      "homepage" : "https://github.com/tokuhirom/UnQLite",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/tokuhirom/Unqlite.git",
-         "web" : "https://github.com/tokuhirom/Unqlite"
+         "url" : "git://github.com/tokuhirom/UnQLite.git",
+         "web" : "https://github.com/tokuhirom/UnQLite"
       }
    },
    "version" : "0.01"
