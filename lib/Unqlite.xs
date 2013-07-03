@@ -17,23 +17,17 @@ extern "C" {
 
 #define XS_STATE(type, x)     (INT2PTR(type, SvROK(x) ? SvIV(SvRV(x)) : SvIV(x)))
 
-/* #define XS_STRUCT2OBJ(sv, class, obj)     if (obj == NULL) {         sv_setsv(sv, &PL_sv_undef);     } else {         sv_setref_pv(sv, class, (void *) obj);     } */
 #define XS_STRUCT2OBJ(sv, class, obj) \
     sv = newSViv(PTR2IV(obj));  \
-        sv = newRV_noinc(sv); \
-            sv_bless(sv, gv_stashpv(class, 1)); \
-                SvREADONLY_on(sv);
+    sv = newRV_noinc(sv); \
+    sv_bless(sv, gv_stashpv(class, 1)); \
+    SvREADONLY_on(sv);
 
 #define SETRC(rc) \
     { \
         SV * i = get_sv("Unqlite::rc", GV_ADD); \
         SvIV_set(i, rc); \
     }
-
-/*
-    { HV * const stash = gv_stashpvn("Unqlite", strlen("Unqlite"), TRUE); \
-    (void)hv_store(stash, "rc", 2, newSViv(rc), 0); } */
-
 
 MODULE = Unqlite    PACKAGE = Unqlite
 
@@ -65,6 +59,10 @@ BOOT:
     newCONSTSUB(stash, "UNQLITE_CANTOPEN", newSViv(UNQLITE_CANTOPEN));
     newCONSTSUB(stash, "UNQLITE_READ_ONLY", newSViv(UNQLITE_READ_ONLY));
     newCONSTSUB(stash, "UNQLITE_LOCKERR", newSViv(UNQLITE_LOCKERR));
+
+    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_EXACT", newSViv(UNQLITE_CURSOR_MATCH_EXACT));
+    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_LE", newSViv(UNQLITE_CURSOR_MATCH_LE));
+    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_GE", newSViv(UNQLITE_CURSOR_MATCH_GE));
 
 SV*
 open(klass, filename, mode=UNQLITE_OPEN_CREATE)
@@ -200,3 +198,213 @@ CODE:
     rc = unqlite_close(pdb);
     SETRC(rc);
 
+SV*
+_cursor_init(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+    unqlite_kv_cursor* cursor;
+CODE:
+    unqlite *pdb = XS_STATE(unqlite*, self);
+    rc = unqlite_kv_cursor_init(pdb, &cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        sv = newSViv(PTR2IV(cursor));
+        sv = newRV_noinc(sv);
+        SvREADONLY_on(sv);
+        RETVAL = sv;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+
+MODULE = Unqlite    PACKAGE = Unqlite::Cursor
+
+SV*
+_first_entry(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_first_entry(cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+int
+_valid_entry(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    /* This will return 1 when valid. 0 otherwise */
+    rc = unqlite_kv_cursor_valid_entry(cursor);
+    RETVAL = rc;
+OUTPUT:
+    RETVAL
+
+SV*
+_next_entry(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_next_entry(cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV*
+_last_entry(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_last_entry(cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV*
+_prev_entry(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_prev_entry(cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV*
+_key(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+    int nbytes;
+    char*buf;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_key(cursor, NULL, &nbytes);
+    SETRC(rc);
+    if (rc!=UNQLITE_OK) {
+        RETVAL = &PL_sv_undef;
+        goto last;
+    }
+    Newxz(buf, nbytes, char);
+    rc = unqlite_kv_cursor_key(cursor, buf, &nbytes);
+    SETRC(rc);
+    sv = newSVpv(buf, nbytes);
+    Safefree(buf);
+    RETVAL = sv;
+    last:
+OUTPUT:
+    RETVAL
+
+SV*
+_data(self)
+    SV * self;
+PREINIT:
+    SV * sv;
+    int rc;
+    unqlite_int64 nbytes;
+    char*buf;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_data(cursor, NULL, &nbytes);
+    SETRC(rc);
+    if (rc!=UNQLITE_OK) {
+        RETVAL = &PL_sv_undef;
+        goto last;
+    }
+    Newxz(buf, nbytes, char);
+    rc = unqlite_kv_cursor_data(cursor, buf, &nbytes);
+    SETRC(rc);
+    sv = newSVpv(buf, nbytes);
+    Safefree(buf);
+    RETVAL = sv;
+    last:
+OUTPUT:
+    RETVAL
+
+void
+_release(self, db)
+    SV * self;
+    SV * db;
+CODE:
+    unqlite *pdb = XS_STATE(unqlite*, db);
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    unqlite_kv_cursor_release(pdb, cursor);
+
+SV*
+_seek(self, key_s, opt=UNQLITE_CURSOR_MATCH_EXACT)
+    SV * self;
+    SV * key_s;
+    int opt;
+PREINIT:
+    STRLEN len;
+    char * key;
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    key = SvPV(key_s, len);
+    rc = unqlite_kv_cursor_seek(cursor, key, len, opt);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV*
+_delete_entry(self)
+    SV * self;
+PREINIT:
+    int rc;
+CODE:
+    unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
+    rc = unqlite_kv_cursor_delete_entry(cursor);
+    SETRC(rc);
+    if (rc == UNQLITE_OK) {
+        RETVAL = &PL_sv_yes;
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL

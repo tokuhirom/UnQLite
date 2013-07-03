@@ -39,6 +39,63 @@ sub errstr {
     if ($rc==UNQLITE_LOCKERR()) { return "UNQLITE_LOCKERR" }
 }
 
+sub cursor_init {
+    my $self = shift;
+    bless [$self->_cursor_init(), $self], 'Unqlite::Cursor';
+}
+
+package Unqlite::Cursor;
+
+sub first_entry {
+    my $self = shift;
+    _first_entry($self->[0]);
+}
+
+sub key {
+    my $self = shift;
+    _key($self->[0]);
+}
+
+sub data {
+    my $self = shift;
+    _data   ($self->[0]);
+}
+
+sub next_entry {
+    my $self = shift;
+    _next_entry($self->[0]);
+}
+
+sub valid_entry {
+    my $self = shift;
+    _valid_entry($self->[0]);
+}
+
+sub seek {
+    my $self = shift;
+    _seek($self->[0], @_);
+}
+
+sub delete_entry {
+    my $self = shift;
+    _delete_entry($self->[0]);
+}
+
+sub prev_entry {
+    my $self = shift;
+    _prev_entry($self->[0]);
+}
+
+sub last_entry {
+    my $self = shift;
+    _last_entry($self->[0]);
+}
+
+sub DESTROY {
+    my $self = shift;
+    _release($self->[0], $self->[1]);
+}
+
 1;
 __END__
 
@@ -66,7 +123,9 @@ This module is Perl5 binding for Unqlite.
 
 If you want to know more information about Unqlite, see L<http://unqlite.org/>.
 
-Current version of Unqlite.pm supports only some C<kv_*> methods. Patches welcome.
+This version of Unqlite.pm does not provides document store feature. Patches welcome.
+
+B<You can use Unqlite.pm as DBM>.
 
 =head1 METHODS
 
@@ -95,6 +154,76 @@ Return code from unqlite. It may updates after any Unqlite API call.
 =item C<< $db->errstr() >>
 
 This API returns stringified version of C<< $db->rc() >>. It's not human readable but it's better than magic number.
+
+=item C<< my $cursor = $db->cursor_init() >>
+
+Create new cursor object.
+
+=back
+
+=head1 Unqlite::Cursor
+
+Unqlite supports cursor for iterating entries.
+
+Here is example code:
+
+    my $cursor = $db->cursor_init();
+    my @ret;
+    for ($cursor->first_entry; $cursor->valid_entry; $cursor->next_entry) {
+        push @ret, $cursor->key(), $cursor->data()
+    }
+
+=head2 METHODS
+
+=over 4
+
+=item C<< $cursor->first_entry() >>
+
+Seek cursor to first entry.
+
+Return true if succeeded, false otherwise.
+
+=item C<< $cursor->last_entry() >>
+
+Seek cursor to last entry.
+
+Return true if succeeded, false otherwise.
+
+=item C<< $cursor->valid_entry() >>
+
+This will return 1 when valid. 0 otherwise
+
+=item C<< $cursor->key() >>
+
+Get current entry's key.
+
+=item C<< $cursor->data() >>
+
+Get current entry's data.
+
+=item C<< $cursor->next_entry() >>
+
+Seek cursor to next entry.
+
+=item C<< $cursor->prev_entry() >>
+
+Seek cursor to previous entry.
+
+Return true if succeeded, false otherwise.
+
+=item C<< $cursor->seek($key, $opt=UNQLITE_CURSOR_MATCH_EXACT) >>
+
+Seek cursor to C< $key >.
+
+You can specify the option as C< $opt >. Please see L<http://unqlite.org/c_api/unqlite_kv_cursor.html> for more details.
+
+Return true if succeeded, false otherwise.
+
+=item C<< $cursor->delete_entry() >>
+
+Delete the database entry pointed by the cursor.
+
+Return true if succeeded, false otherwise.
 
 =back
 

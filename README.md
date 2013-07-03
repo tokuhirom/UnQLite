@@ -20,7 +20,9 @@ This module is Perl5 binding for Unqlite.
 
 If you want to know more information about Unqlite, see [http://unqlite.org/](http://unqlite.org/).
 
-Current version of Unqlite.pm supports only some `kv_*` methods. Patches welcome.
+This version of Unqlite.pm does not provides document store feature. Patches welcome.
+
+__You can use Unqlite.pm as DBM__.
 
 # METHODS
 
@@ -47,6 +49,72 @@ Current version of Unqlite.pm supports only some `kv_*` methods. Patches welcome
 - `$db->errstr()`
 
     This API returns stringified version of `$db->rc()`. It's not human readable but it's better than magic number.
+
+- `my $cursor = $db->cursor_init()`
+
+    Create new cursor object.
+
+# Unqlite::Cursor
+
+Unqlite supports cursor for iterating entries.
+
+Here is example code:
+
+    my $cursor = $db->cursor_init();
+    my @ret;
+    for ($cursor->first_entry; $cursor->valid_entry; $cursor->next_entry) {
+        push @ret, $cursor->key(), $cursor->data()
+    }
+
+## METHODS
+
+- `$cursor->first_entry()`
+
+    Seek cursor to first entry.
+
+    Return true if succeeded, false otherwise.
+
+- `$cursor->last_entry()`
+
+    Seek cursor to last entry.
+
+    Return true if succeeded, false otherwise.
+
+- `$cursor->valid_entry()`
+
+    This will return 1 when valid. 0 otherwise
+
+- `$cursor->key()`
+
+    Get current entry's key.
+
+- `$cursor->data()`
+
+    Get current entry's data.
+
+- `$cursor->next_entry()`
+
+    Seek cursor to next entry.
+
+- `$cursor->prev_entry()`
+
+    Seek cursor to previous entry.
+
+    Return true if succeeded, false otherwise.
+
+- `$cursor->seek($key, $opt=UNQLITE_CURSOR_MATCH_EXACT)`
+
+    Seek cursor to ` $key `.
+
+    You can specify the option as ` $opt `. Please see [http://unqlite.org/c\_api/unqlite\_kv\_cursor.html](http://unqlite.org/c\_api/unqlite\_kv\_cursor.html) for more details.
+
+    Return true if succeeded, false otherwise.
+
+- `$cursor->delete_entry()`
+
+    Delete the database entry pointed by the cursor.
+
+    Return true if succeeded, false otherwise.
 
 # LICENSE
 
