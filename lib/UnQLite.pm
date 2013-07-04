@@ -12,7 +12,7 @@ XSLoader::load(__PACKAGE__, $VERSION);
 
 sub TIEHASH {
     my $class = shift;
-    my $self = $class->open(@_) or croak $class->errstr;
+    my $self = $class->open(@_) or Carp::croak $class->errstr;
     $self->cursor_init;
 }
 
@@ -112,14 +112,14 @@ sub FETCH {
 
 sub STORE {
     my ($self, $key, $value) = @_;
-    $self->[1]->kv_store($key, $value) or croak $self->[1]->errstr;
+    $self->[1]->kv_store($key, $value) or Carp::croak $self->[1]->errstr;
     $value;
 }
 
 sub DELETE {
     my ($self, $key) = @_;
     my $prev = $self->kv_fetch($key);
-    $self->[1]->kv_delete($key) or croak $self->[1]->errstr;
+    $self->[1]->kv_delete($key) or Carp::croak $self->[1]->errstr;
     $prev;
 }
 
