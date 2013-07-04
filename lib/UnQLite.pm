@@ -120,7 +120,7 @@ sub DELETE {
     my ($self, $key) = @_;
     my $prev = $self->[1]->kv_fetch($key);
     my $errstr = $self->[1]->errstr;
-    return if $errstr && $errstr eq 'UNQLITE_NOTFOUND';
+    return unless $errstr && $errstr eq 'UNQLITE_OK';
     $self->[1]->kv_delete($key) or Carp::croak $self->[1]->errstr;
     $prev;
 }
