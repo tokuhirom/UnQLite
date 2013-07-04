@@ -28,6 +28,9 @@ my $tmp = tempdir( CLEANUP => 1 );
     is($hash{yay}, 'yappo');
     $hash{foo} = 'baz';
     is($hash{foo}, 'baz');
+    $hash{delete} = 'delete';
+    is(delete $hash{delete}, 'delete');
+    is(delete $hash{delete}, undef);
 
     is(join(" ", sort keys %hash), "foo yay");
     is(join(" ", sort values %hash), "baz yappo");
