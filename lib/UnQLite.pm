@@ -139,9 +139,9 @@ sub NEXTKEY {
 
 sub EXISTS {
     my ($self, $key) = @_;
-    $self->[1]->kv_fetch($key);
+    $self->[1]->kv_fetch($key) and return 1;
     my $errstr = $self->[1]->errstr;
-    return $errstr eq 'UNQLITE_NOTFOUND' ? 1 : 0;
+    return $errstr && $errstr eq 'UNQLITE_OK' ? 1 : 0;
 }
 
 sub CLEAR {

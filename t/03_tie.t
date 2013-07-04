@@ -31,6 +31,8 @@ my $tmp = tempdir( CLEANUP => 1 );
     $hash{delete} = 'delete';
     is(delete $hash{delete}, 'delete');
     is(delete $hash{delete}, undef);
+    ok(exists $hash{foo});
+    ok(!exists $hash{delete});
 
     is(join(" ", sort keys %hash), "foo yay");
     is(join(" ", sort values %hash), "baz yappo");
