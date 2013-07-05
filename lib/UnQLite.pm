@@ -16,10 +16,15 @@ sub TIEHASH {
     $self->cursor_init;
 }
 
-sub rc { $UnQLite::rc }
+sub rc {
+    my $self = shift;
+    my $_rc = _rc($self);
+    defined $_rc ? $rc = $_rc : $rc;
+}
 
 sub errstr {
     my $self = shift;
+    my $rc = $self->rc;
     if ($rc==UnQLite::UNQLITE_OK()) { return "UNQLITE_OK" }
     if ($rc==UNQLITE_NOMEM()) { return "UNQLITE_NOMEM" }
     if ($rc==UNQLITE_ABORT()) { return "UNQLITE_ABORT" }
@@ -52,6 +57,12 @@ sub cursor_init {
 }
 
 package UnQLite::Cursor;
+
+sub rc {
+    my $self = shift;
+    my $_rc = _rc($self->[0]);
+    defined $_rc ? $UnQLite::rc = $_rc : $UnQLite::rc;
+}
 
 sub first_entry {
     my $self = shift;
