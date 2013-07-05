@@ -19,14 +19,21 @@ extern "C" {
 
 #define XS_STRUCT2OBJ(sv, class, obj) \
     sv = newSViv(PTR2IV(obj));  \
+    sv_magic(sv, sv_2mortal(newSViv(UNQLITE_OK)), PERL_MAGIC_ext, NULL, 0); \
     sv = newRV_noinc(sv); \
     sv_bless(sv, gv_stashpv(class, 1)); \
     SvREADONLY_on(sv);
 
-#define SETRC(rc) \
+#define SETRC(rc, self) \
     { \
         SV * i = get_sv("UnQLite::rc", GV_ADD); \
         SvIV_set(i, rc); \
+        if (SvROK(self)) { \
+            MAGIC *_mg = mg_find(SvRV(self), PERL_MAGIC_ext); \
+            if (_mg) { \
+                SvIV_set(_mg->mg_obj, rc); \
+            } \
+        } \
     }
 
 MODULE = UnQLite    PACKAGE = UnQLite
@@ -75,10 +82,29 @@ PREINIT:
     int rc;
 CODE:
     rc = unqlite_open(&pdb, filename, mode);
-    SETRC(rc);
     if (rc == UNQLITE_OK) {
         XS_STRUCT2OBJ(sv, klass, pdb);
+        SETRC(rc, sv);
         RETVAL = sv;
+    } else {
+        SETRC(rc, &PL_sv_undef);
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
+SV* _rc(self)
+    SV *self
+PREINIT:
+    MAGIC *mg;
+CODE:
+    if (SvROK(self)) {
+        mg = mg_find(SvRV(self), PERL_MAGIC_ext);
+        if (mg) {
+            RETVAL = newSVsv(mg->mg_obj);
+        } else {
+            RETVAL = &PL_sv_undef;
+        }
     } else {
         RETVAL = &PL_sv_undef;
     }
@@ -101,7 +127,7 @@ CODE:
     key_c = SvPV(key_sv, key_l);
     data_c = SvPV(data_sv, data_l);
     rc = unqlite_kv_store(pdb, key_c, key_l, data_c, data_l);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc==UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -126,7 +152,7 @@ CODE:
     key_c = SvPV(key_sv, key_l);
     data_c = SvPV(data_sv, data_l);
     rc = unqlite_kv_append(pdb, key_c, key_l, data_c, data_l);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc==UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -147,7 +173,7 @@ CODE:
     unqlite *pdb = XS_STATE(unqlite*, self);
     key_c = SvPV(key_sv, key_l);
     rc = unqlite_kv_delete(pdb, key_c, key_l);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc==UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -173,14 +199,14 @@ CODE:
 
     /* Allocate a buffer big enough to hold the record content */
     rc = unqlite_kv_fetch(pdb, key_c, key_l, NULL, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc!=UNQLITE_OK) {
         RETVAL = &PL_sv_undef;
         goto last;
     }
     Newxz(buf, nbytes, char);
     rc = unqlite_kv_fetch(pdb, key_c, key_l, buf, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     sv = newSVpv(buf, nbytes);
     Safefree(buf);
     RETVAL = sv;
@@ -196,7 +222,7 @@ PREINIT:
 CODE:
     unqlite *pdb = XS_STATE(unqlite*, self);
     rc = unqlite_close(pdb);
-    SETRC(rc);
+    SETRC(rc, &PL_sv_undef);
 
 SV*
 _cursor_init(self)
@@ -208,9 +234,10 @@ PREINIT:
 CODE:
     unqlite *pdb = XS_STATE(unqlite*, self);
     rc = unqlite_kv_cursor_init(pdb, &cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         sv = newSViv(PTR2IV(cursor));
+        sv_magic(sv, sv_2mortal(newSViv(UNQLITE_OK)), PERL_MAGIC_ext, NULL, 0);
         sv = newRV_noinc(sv);
         SvREADONLY_on(sv);
         RETVAL = sv;
@@ -223,6 +250,24 @@ OUTPUT:
 
 MODULE = UnQLite    PACKAGE = UnQLite::Cursor
 
+SV* _rc(self)
+    SV *self
+PREINIT:
+    MAGIC *mg;
+CODE:
+    if (SvROK(self)) {
+        mg = mg_find(SvRV(self), PERL_MAGIC_ext);
+        if (mg) {
+            RETVAL = newSVsv(mg->mg_obj);
+        } else {
+            RETVAL = &PL_sv_undef;
+        }
+    } else {
+        RETVAL = &PL_sv_undef;
+    }
+OUTPUT:
+    RETVAL
+
 SV*
 _first_entry(self)
     SV * self;
@@ -232,7 +277,7 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_first_entry(cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -264,7 +309,7 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_next_entry(cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -282,7 +327,7 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_last_entry(cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -300,7 +345,7 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_prev_entry(cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -320,14 +365,14 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_key(cursor, NULL, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc!=UNQLITE_OK) {
         RETVAL = &PL_sv_undef;
         goto last;
     }
     Newxz(buf, nbytes, char);
     rc = unqlite_kv_cursor_key(cursor, buf, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     sv = newSVpv(buf, nbytes);
     Safefree(buf);
     RETVAL = sv;
@@ -346,14 +391,14 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_data(cursor, NULL, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc!=UNQLITE_OK) {
         RETVAL = &PL_sv_undef;
         goto last;
     }
     Newxz(buf, nbytes, char);
     rc = unqlite_kv_cursor_data(cursor, buf, &nbytes);
-    SETRC(rc);
+    SETRC(rc, self);
     sv = newSVpv(buf, nbytes);
     Safefree(buf);
     RETVAL = sv;
@@ -383,7 +428,7 @@ CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     key = SvPV(key_s, len);
     rc = unqlite_kv_cursor_seek(cursor, key, len, opt);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
@@ -400,7 +445,7 @@ PREINIT:
 CODE:
     unqlite_kv_cursor *cursor = XS_STATE(unqlite_kv_cursor*, self);
     rc = unqlite_kv_cursor_delete_entry(cursor);
-    SETRC(rc);
+    SETRC(rc, self);
     if (rc == UNQLITE_OK) {
         RETVAL = &PL_sv_yes;
     } else {
