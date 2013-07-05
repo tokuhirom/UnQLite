@@ -12,6 +12,11 @@ UnQLite - Perl bindings for UnQLite
     $db->kv_delete('foo');
     undef $db; # close database
 
+    # tie interface
+    tie my %hash, 'UnQLite', 'foo.db';
+    $hash{foo} = 'bar';
+    say $hash{foo}; # => bar
+
 # DESCRIPTION
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.  
