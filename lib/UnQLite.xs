@@ -42,34 +42,44 @@ PROTOTYPES: DISABLE
 
 BOOT:
     HV* stash = gv_stashpvn("UnQLite", strlen("UnQLite"), TRUE);
-    newCONSTSUB(stash, "UNQLITE_OK", newSViv(UNQLITE_OK));
-    newCONSTSUB(stash, "UNQLITE_NOMEM", newSViv(UNQLITE_NOMEM));
-    newCONSTSUB(stash, "UNQLITE_ABORT", newSViv(UNQLITE_ABORT));
-    newCONSTSUB(stash, "UNQLITE_IOERR", newSViv(UNQLITE_IOERR));
-    newCONSTSUB(stash, "UNQLITE_CORRUPT", newSViv(UNQLITE_CORRUPT));
-    newCONSTSUB(stash, "UNQLITE_LOCKED", newSViv(UNQLITE_LOCKED));
-    newCONSTSUB(stash, "UNQLITE_BUSY", newSViv(UNQLITE_BUSY));
-    newCONSTSUB(stash, "UNQLITE_DONE", newSViv(UNQLITE_DONE));
-    newCONSTSUB(stash, "UNQLITE_PERM", newSViv(UNQLITE_PERM));
-    newCONSTSUB(stash, "UNQLITE_NOTIMPLEMENTED", newSViv(UNQLITE_NOTIMPLEMENTED));
-    newCONSTSUB(stash, "UNQLITE_NOTFOUND", newSViv(UNQLITE_NOTFOUND));
-    newCONSTSUB(stash, "UNQLITE_NOOP", newSViv(UNQLITE_NOOP));
-    newCONSTSUB(stash, "UNQLITE_INVALID", newSViv(UNQLITE_INVALID));
-    newCONSTSUB(stash, "UNQLITE_EOF", newSViv(UNQLITE_EOF));
-    newCONSTSUB(stash, "UNQLITE_UNKNOWN", newSViv(UNQLITE_UNKNOWN));
-    newCONSTSUB(stash, "UNQLITE_LIMIT", newSViv(UNQLITE_LIMIT));
-    newCONSTSUB(stash, "UNQLITE_EXISTS", newSViv(UNQLITE_EXISTS));
-    newCONSTSUB(stash, "UNQLITE_EMPTY", newSViv(UNQLITE_EMPTY));
-    newCONSTSUB(stash, "UNQLITE_COMPILE_ERR", newSViv(UNQLITE_COMPILE_ERR));
-    newCONSTSUB(stash, "UNQLITE_VM_ERR", newSViv(UNQLITE_VM_ERR));
-    newCONSTSUB(stash, "UNQLITE_FULL", newSViv(UNQLITE_FULL));
-    newCONSTSUB(stash, "UNQLITE_CANTOPEN", newSViv(UNQLITE_CANTOPEN));
-    newCONSTSUB(stash, "UNQLITE_READ_ONLY", newSViv(UNQLITE_READ_ONLY));
-    newCONSTSUB(stash, "UNQLITE_LOCKERR", newSViv(UNQLITE_LOCKERR));
-
-    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_EXACT", newSViv(UNQLITE_CURSOR_MATCH_EXACT));
-    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_LE", newSViv(UNQLITE_CURSOR_MATCH_LE));
-    newCONSTSUB(stash, "UNQLITE_CURSOR_MATCH_GE", newSViv(UNQLITE_CURSOR_MATCH_GE));
+#define _XSTR(s) _STR(s)
+#define _STR(s)  #s
+#define UnConst(c) newCONSTSUB(stash, "UNQ"_XSTR(c), newSViv(UNQ##c))
+    UnConst(LITE_OK);
+    UnConst(LITE_NOMEM);
+    UnConst(LITE_ABORT);
+    UnConst(LITE_IOERR);
+    UnConst(LITE_CORRUPT);
+    UnConst(LITE_LOCKED);
+    UnConst(LITE_BUSY);
+    UnConst(LITE_DONE);
+    UnConst(LITE_PERM);
+    UnConst(LITE_NOTIMPLEMENTED);
+    UnConst(LITE_NOTFOUND);
+    UnConst(LITE_NOOP);
+    UnConst(LITE_INVALID);
+    UnConst(LITE_EOF);
+    UnConst(LITE_UNKNOWN);
+    UnConst(LITE_LIMIT);
+    UnConst(LITE_EXISTS);
+    UnConst(LITE_EMPTY);
+    UnConst(LITE_COMPILE_ERR);
+    UnConst(LITE_VM_ERR);
+    UnConst(LITE_FULL);
+    UnConst(LITE_CANTOPEN);
+    UnConst(LITE_READ_ONLY);
+    UnConst(LITE_LOCKERR);
+    UnConst(LITE_OPEN_READONLY);
+    UnConst(LITE_OPEN_READWRITE);
+    UnConst(LITE_OPEN_CREATE);
+    UnConst(LITE_OPEN_EXCLUSIVE);
+    UnConst(LITE_OPEN_TEMP_DB);
+    UnConst(LITE_OPEN_OMIT_JOURNALING);
+    UnConst(LITE_OPEN_IN_MEMORY);
+    UnConst(LITE_OPEN_MMAP);
+    UnConst(LITE_CURSOR_MATCH_EXACT);
+    UnConst(LITE_CURSOR_MATCH_LE);
+    UnConst(LITE_CURSOR_MATCH_GE);
 
 SV*
 open(klass, filename, mode=UNQLITE_OPEN_CREATE)
