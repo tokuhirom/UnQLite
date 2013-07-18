@@ -6,14 +6,14 @@ UnQLite - Perl bindings for UnQLite
 
     use UnQLite;
 
-    my $db = UnQLite->open('foo.db');
+    my $db = UnQLite->open('foo.db', UNQLITE_OPEN_READWRITE|UNQLITE_OPEN_CREATE);
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
     undef $db; # close database
 
     # tie interface
-    tie my %hash, 'UnQLite', 'foo.db';
+    tie my %hash, 'UnQLite', 'foo.db', UNQLITE_OPEN_READWRITE;
     $hash{foo} = 'bar';
     say $hash{foo}; # => bar
 
@@ -34,6 +34,17 @@ __You can use UnQLite.pm as DBM__.
 - `my $db = UnQLite->open('foo.db'[, $mode]);`
 
     Open the database.
+
+    Modes:
+
+        UNQLITE_OPEN_CREATE      (Default)
+        UNQLITE_OPEN_READONLY
+        UNQLITE_OPEN_READWRITE
+        UNQLITE_OPEN_EXCLUSIVE
+        UNQLITE_OPEN_TEMP_DB
+        UNQLITE_OPEN_OMIT_JOURNALING
+        UNQLITE_OPEN_IN_MEMORY
+        UNQLITE_OPEN_MMAP
 
 - `$db->kv_store($key, $value);`
 
