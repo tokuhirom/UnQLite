@@ -44,42 +44,42 @@ BOOT:
     HV* stash = gv_stashpvn("UnQLite", strlen("UnQLite"), TRUE);
 #define _XSTR(s) _STR(s)
 #define _STR(s)  #s
-#define UnConst(c) newCONSTSUB(stash, "UNQ"_XSTR(c), newSViv(UNQ##c))
-    UnConst(LITE_OK);
-    UnConst(LITE_NOMEM);
-    UnConst(LITE_ABORT);
-    UnConst(LITE_IOERR);
-    UnConst(LITE_CORRUPT);
-    UnConst(LITE_LOCKED);
-    UnConst(LITE_BUSY);
-    UnConst(LITE_DONE);
-    UnConst(LITE_PERM);
-    UnConst(LITE_NOTIMPLEMENTED);
-    UnConst(LITE_NOTFOUND);
-    UnConst(LITE_NOOP);
-    UnConst(LITE_INVALID);
-    UnConst(LITE_EOF);
-    UnConst(LITE_UNKNOWN);
-    UnConst(LITE_LIMIT);
-    UnConst(LITE_EXISTS);
-    UnConst(LITE_EMPTY);
-    UnConst(LITE_COMPILE_ERR);
-    UnConst(LITE_VM_ERR);
-    UnConst(LITE_FULL);
-    UnConst(LITE_CANTOPEN);
-    UnConst(LITE_READ_ONLY);
-    UnConst(LITE_LOCKERR);
-    UnConst(LITE_OPEN_READONLY);
-    UnConst(LITE_OPEN_READWRITE);
-    UnConst(LITE_OPEN_CREATE);
-    UnConst(LITE_OPEN_EXCLUSIVE);
-    UnConst(LITE_OPEN_TEMP_DB);
-    UnConst(LITE_OPEN_OMIT_JOURNALING);
-    UnConst(LITE_OPEN_IN_MEMORY);
-    UnConst(LITE_OPEN_MMAP);
-    UnConst(LITE_CURSOR_MATCH_EXACT);
-    UnConst(LITE_CURSOR_MATCH_LE);
-    UnConst(LITE_CURSOR_MATCH_GE);
+#define UnConst(c) newCONSTSUB(stash, _XSTR(c), newSViv(UNQLITE_##c))
+    UnConst(OK);
+    UnConst(NOMEM);
+    UnConst(ABORT);
+    UnConst(IOERR);
+    UnConst(CORRUPT);
+    UnConst(LOCKED);
+    UnConst(BUSY);
+    UnConst(DONE);
+    UnConst(PERM);
+    UnConst(NOTIMPLEMENTED);
+    UnConst(NOTFOUND);
+    UnConst(NOOP);
+    UnConst(INVALID);
+    UnConst(EOF);
+    UnConst(UNKNOWN);
+    UnConst(LIMIT);
+    UnConst(EXISTS);
+    UnConst(EMPTY);
+    UnConst(COMPILE_ERR);
+    UnConst(VM_ERR);
+    UnConst(FULL);
+    UnConst(CANTOPEN);
+    UnConst(READ_ONLY);
+    UnConst(LOCKERR);
+    UnConst(OPEN_READONLY);
+    UnConst(OPEN_READWRITE);
+    UnConst(OPEN_CREATE);
+    UnConst(OPEN_EXCLUSIVE);
+    UnConst(OPEN_TEMP_DB);
+    UnConst(OPEN_OMIT_JOURNALING);
+    UnConst(OPEN_IN_MEMORY);
+    UnConst(OPEN_MMAP);
+    UnConst(CURSOR_MATCH_EXACT);
+    UnConst(CURSOR_MATCH_LE);
+    UnConst(CURSOR_MATCH_GE);
 
 SV*
 open(klass, filename, mode=UNQLITE_OPEN_CREATE)

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Carp ();
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 our $rc = 0;
 
 use XSLoader;
@@ -25,30 +25,30 @@ sub rc {
 sub errstr {
     my $self = shift;
     my $rc = $self->rc;
-    if ($rc==UnQLite::UNQLITE_OK()) { return "UNQLITE_OK" }
-    if ($rc==UNQLITE_NOMEM()) { return "UNQLITE_NOMEM" }
-    if ($rc==UNQLITE_ABORT()) { return "UNQLITE_ABORT" }
-    if ($rc==UNQLITE_IOERR()) { return "UNQLITE_IOERR" }
-    if ($rc==UNQLITE_CORRUPT()) { return "UNQLITE_CORRUPT" }
-    if ($rc==UNQLITE_LOCKED()) { return "UNQLITE_LOCKED" }
-    if ($rc==UNQLITE_BUSY()) { return "UNQLITE_BUSY" }
-    if ($rc==UNQLITE_DONE()) { return "UNQLITE_DONE" }
-    if ($rc==UNQLITE_PERM()) { return "UNQLITE_PERM" }
-    if ($rc==UNQLITE_NOTIMPLEMENTED()) { return "UNQLITE_NOTIMPLEMENTED" }
-    if ($rc==UNQLITE_NOTFOUND()) { return "UNQLITE_NOTFOUND" }
-    if ($rc==UNQLITE_NOOP()) { return "UNQLITE_NOOP" }
-    if ($rc==UNQLITE_INVALID()) { return "UNQLITE_INVALID" }
-    if ($rc==UNQLITE_EOF()) { return "UNQLITE_EOF" }
-    if ($rc==UNQLITE_UNKNOWN()) { return "UNQLITE_UNKNOWN" }
-    if ($rc==UNQLITE_LIMIT()) { return "UNQLITE_LIMIT" }
-    if ($rc==UNQLITE_EXISTS()) { return "UNQLITE_EXISTS" }
-    if ($rc==UNQLITE_EMPTY()) { return "UNQLITE_EMPTY" }
-    if ($rc==UNQLITE_COMPILE_ERR()) { return "UNQLITE_COMPILE_ERR" }
-    if ($rc==UNQLITE_VM_ERR()) { return "UNQLITE_VM_ERR" }
-    if ($rc==UNQLITE_FULL()) { return "UNQLITE_FULL" }
-    if ($rc==UNQLITE_CANTOPEN()) { return "UNQLITE_CANTOPEN" }
-    if ($rc==UNQLITE_READ_ONLY()) { return "UNQLITE_READ_ONLY" }
-    if ($rc==UNQLITE_LOCKERR()) { return "UNQLITE_LOCKERR" }
+    if ($rc==UnQLite::OK()) { return "UNQLITE_OK" }
+    if ($rc==UnQLite::NOMEM()) { return "UNQLITE_NOMEM" }
+    if ($rc==UnQLite::ABORT()) { return "UNQLITE_ABORT" }
+    if ($rc==UnQLite::IOERR()) { return "UNQLITE_IOERR" }
+    if ($rc==UnQLite::CORRUPT()) { return "UNQLITE_CORRUPT" }
+    if ($rc==UnQLite::LOCKED()) { return "UNQLITE_LOCKED" }
+    if ($rc==UnQLite::BUSY()) { return "UNQLITE_BUSY" }
+    if ($rc==UnQLite::DONE()) { return "UNQLITE_DONE" }
+    if ($rc==UnQLite::PERM()) { return "UNQLITE_PERM" }
+    if ($rc==UnQLite::NOTIMPLEMENTED()) { return "UNQLITE_NOTIMPLEMENTED" }
+    if ($rc==UnQLite::NOTFOUND()) { return "UNQLITE_NOTFOUND" }
+    if ($rc==UnQLite::NOOP()) { return "UNQLITE_NOOP" }
+    if ($rc==UnQLite::INVALID()) { return "UNQLITE_INVALID" }
+    if ($rc==UnQLite::EOF()) { return "UNQLITE_EOF" }
+    if ($rc==UnQLite::UNKNOWN()) { return "UNQLITE_UNKNOWN" }
+    if ($rc==UnQLite::LIMIT()) { return "UNQLITE_LIMIT" }
+    if ($rc==UnQLite::EXISTS()) { return "UNQLITE_EXISTS" }
+    if ($rc==UnQLite::EMPTY()) { return "UNQLITE_EMPTY" }
+    if ($rc==UnQLite::COMPILE_ERR()) { return "UNQLITE_COMPILE_ERR" }
+    if ($rc==UnQLite::VM_ERR()) { return "UNQLITE_VM_ERR" }
+    if ($rc==UnQLite::FULL()) { return "UNQLITE_FULL" }
+    if ($rc==UnQLite::CANTOPEN()) { return "UNQLITE_CANTOPEN" }
+    if ($rc==UnQLite::READ_ONLY()) { return "UNQLITE_READ_ONLY" }
+    if ($rc==UnQLite::LOCKERR()) { return "UNQLITE_LOCKERR" }
 }
 
 sub cursor_init {
@@ -185,14 +185,14 @@ UnQLite - Perl bindings for UnQLite
 
     use UnQLite;
 
-    my $db = UnQLite->open('foo.db', UNQLITE_OPEN_READWRITE|UNQLITE_OPEN_CREATE);
+    my $db = UnQLite->open('foo.db', UnQLite::OPEN_READWRITE|UnQLite::OPEN_CREATE);
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
     undef $db; # close database
 
     # tie interface
-    tie my %hash, 'UnQLite', 'foo.db', UNQLITE_OPEN_READWRITE;
+    tie my %hash, 'UnQLite', 'foo.db', UnQLite::OPEN_READWRITE;
     $hash{foo} = 'bar';
     say $hash{foo}; # => bar
 
@@ -218,14 +218,14 @@ Open the database.
 
 Modes:
 
-    UNQLITE_OPEN_CREATE      (Default)
-    UNQLITE_OPEN_READONLY
-    UNQLITE_OPEN_READWRITE
-    UNQLITE_OPEN_EXCLUSIVE
-    UNQLITE_OPEN_TEMP_DB
-    UNQLITE_OPEN_OMIT_JOURNALING
-    UNQLITE_OPEN_IN_MEMORY
-    UNQLITE_OPEN_MMAP
+    UnQLite::OPEN_CREATE      (Default)
+    UnQLite::OPEN_READONLY
+    UnQLite::OPEN_READWRITE
+    UnQLite::OPEN_EXCLUSIVE
+    UnQLite::OPEN_TEMP_DB
+    UnQLite::OPEN_OMIT_JOURNALING
+    UnQLite::OPEN_IN_MEMORY
+    UnQLite::OPEN_MMAP
 
 =item C<< $db->kv_store($key, $value); >>
 
@@ -237,7 +237,7 @@ Fetch data from database.
 
 =item C<< $db->kv_delete($key); >>
 
-Delte C< $key > from database.
+Delete C< $key > from database.
 
 =item C<< $db->rc(); >>
 
