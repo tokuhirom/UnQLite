@@ -6,14 +6,14 @@ UnQLite - Perl bindings for UnQLite
 
     use UnQLite;
 
-    my $db = UnQLite->open('foo.db', UNQLITE_OPEN_READWRITE|UNQLITE_OPEN_CREATE);
+    my $db = UnQLite->open('foo.db', UnQLite::OPEN_READWRITE|UnQLite::OPEN_CREATE);
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
     undef $db; # close database
 
     # tie interface
-    tie my %hash, 'UnQLite', 'foo.db', UNQLITE_OPEN_READWRITE;
+    tie my %hash, 'UnQLite', 'foo.db', UnQLite::OPEN_READWRITE;
     $hash{foo} = 'bar';
     say $hash{foo}; # => bar
 
@@ -37,14 +37,14 @@ __You can use UnQLite.pm as DBM__.
 
     Modes:
 
-        UNQLITE_OPEN_CREATE      (Default)
-        UNQLITE_OPEN_READONLY
-        UNQLITE_OPEN_READWRITE
-        UNQLITE_OPEN_EXCLUSIVE
-        UNQLITE_OPEN_TEMP_DB
-        UNQLITE_OPEN_OMIT_JOURNALING
-        UNQLITE_OPEN_IN_MEMORY
-        UNQLITE_OPEN_MMAP
+        UnQLite::OPEN_CREATE      (Default)
+        UnQLite::OPEN_READONLY
+        UnQLite::OPEN_READWRITE
+        UnQLite::OPEN_EXCLUSIVE
+        UnQLite::OPEN_TEMP_DB
+        UnQLite::OPEN_OMIT_JOURNALING
+        UnQLite::OPEN_IN_MEMORY
+        UnQLite::OPEN_MMAP
 
 - `$db->kv_store($key, $value);`
 
@@ -118,7 +118,7 @@ Here is example code:
 
     Return true if succeeded, false otherwise.
 
-- `$cursor->seek($key, $opt=UNQLITE_CURSOR_MATCH_EXACT)`
+- `$cursor->seek($key, $opt=UnQLite::CURSOR_MATCH_EXACT)`
 
     Seek cursor to ` $key `.
 
