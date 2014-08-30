@@ -2,6 +2,10 @@ Revision history for Perl extension Unqlite
 
 {{$NEXT}}
 
+0.04 2014-08-30T09:33:52Z
+
+    - Fixed packaging issue.
+
 0.03 2013-07-18T03:14:07Z
 
     - more OPEN consts as mode argument

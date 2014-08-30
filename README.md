@@ -27,7 +27,7 @@ If you want to know more information about UnQLite, see [http://unqlite.org/](ht
 
 This version of UnQLite.pm does not provides document store feature. Patches welcome.
 
-__You can use UnQLite.pm as DBM__.
+**You can use UnQLite.pm as DBM**.
 
 # METHODS
 
@@ -122,7 +122,7 @@ Here is example code:
 
     Seek cursor to ` $key `.
 
-    You can specify the option as ` $opt `. Please see [http://unqlite.org/c\_api/unqlite\_kv\_cursor.html](http://unqlite.org/c\_api/unqlite\_kv\_cursor.html) for more details.
+    You can specify the option as ` $opt `. Please see [http://unqlite.org/c\_api/unqlite\_kv\_cursor.html](http://unqlite.org/c_api/unqlite_kv_cursor.html) for more details.
 
     Return true if succeeded, false otherwise.
 
