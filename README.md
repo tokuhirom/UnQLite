@@ -6,14 +6,14 @@ UnQLite - Perl bindings for UnQLite
 
     use UnQLite;
 
-    my $db = UnQLite->open('foo.db', UNQLITE_OPEN_READWRITE|UNQLITE_OPEN_CREATE);
+    my $db = UnQLite->open('foo.db', UnQLite::UNQLITE_OPEN_READWRITE|UnQLite::UNQLITE_OPEN_CREATE);
     $db->kv_store('foo', 'bar');
     say $db->kv_fetch('foo'); # => bar
     $db->kv_delete('foo');
     undef $db; # close database
 
     # tie interface
-    tie my %hash, 'UnQLite', 'foo.db', UNQLITE_OPEN_READWRITE;
+    tie my %hash, 'UnQLite', 'foo.db', UnQLite::UNQLITE_OPEN_READWRITE;
     $hash{foo} = 'bar';
     say $hash{foo}; # => bar
 
@@ -37,14 +37,14 @@ This version of UnQLite.pm does not provides document store feature. Patches wel
 
     Modes:
 
-        UNQLITE_OPEN_CREATE      (Default)
-        UNQLITE_OPEN_READONLY
-        UNQLITE_OPEN_READWRITE
-        UNQLITE_OPEN_EXCLUSIVE
-        UNQLITE_OPEN_TEMP_DB
-        UNQLITE_OPEN_OMIT_JOURNALING
-        UNQLITE_OPEN_IN_MEMORY
-        UNQLITE_OPEN_MMAP
+        UnQLite::UNQLITE_OPEN_CREATE      (Default)
+        UnQLite::UNQLITE_OPEN_READONLY
+        UnQLite::UNQLITE_OPEN_READWRITE
+        UnQLite::UNQLITE_OPEN_EXCLUSIVE
+        UnQLite::UNQLITE_OPEN_TEMP_DB
+        UnQLite::UNQLITE_OPEN_OMIT_JOURNALING
+        UnQLite::UNQLITE_OPEN_IN_MEMORY
+        UnQLite::UNQLITE_OPEN_MMAP
 
 - `$db->kv_store($key, $value);`
 
@@ -118,7 +118,7 @@ Here is example code:
 
     Return true if succeeded, false otherwise.
 
-- `$cursor->seek($key, $opt=UNQLITE_CURSOR_MATCH_EXACT)`
+- `$cursor->seek($key, $opt=UnQLite::UNQLITE_CURSOR_MATCH_EXACT)`
 
     Seek cursor to ` $key `.
 
