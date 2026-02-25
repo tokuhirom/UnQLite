@@ -1,1 +1,4 @@
 c_source = ["unqlite"]
+
+[Metadata]
+x_deprecated = 1
