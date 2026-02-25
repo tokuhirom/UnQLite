@@ -2,6 +2,10 @@ Revision history for Perl extension Unqlite
 
 {{$NEXT}}
 
+0.06 2026-02-25T01:19:01Z
+
+    - Deprecate
+
 0.05 2014-12-23T22:55:15Z
 
     - Doc fix

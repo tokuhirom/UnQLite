@@ -1,6 +1,6 @@
 # NAME
 
-UnQLite - Perl bindings for UnQLite
+UnQLite - (DEPRECATED) Perl bindings for UnQLite
 
 # SYNOPSIS
 
@@ -18,6 +18,8 @@ UnQLite - Perl bindings for UnQLite
     say $hash{foo}; # => bar
 
 # DESCRIPTION
+
+**This module is deprecated.** The upstream UnQLite project is no longer maintained. Do not use it in new code.
 
 UnQLite is a in-process software library which implements a self-contained, serverless, zero-configuration, transactional NoSQL database engine. UnQLite is a document store database similar to MongoDB, Redis, CouchDB etc. as well a standard Key/Value store similar to BerkeleyDB, LevelDB, etc.  
 
