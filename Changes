@@ -2,6 +2,8 @@ Revision history for Perl extension Unqlite
 
 {{$NEXT}}
 
+0.07 2026-02-28T01:50:18Z
+
     - Update bundled UnQLite from 1.1.6 to 1.1.9
     - Includes upstream fixes for commit-related memory leak and file handle leak
 

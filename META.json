@@ -63,7 +63,7 @@
          "web" : "https://github.com/tokuhirom/UnQLite"
       }
    },
-   "version" : "0.06",
+   "version" : "0.07",
    "x_contributors" : [
       "Kenichi Ishigaki <ishigaki@cpan.org>",
       "Reini Urban <rurban@cpanel.net>"
